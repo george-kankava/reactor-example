@@ -10,6 +10,7 @@ import reactor.test.StepVerifier;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 class ReactorExamplesApplicationTests {
@@ -180,6 +181,19 @@ class ReactorExamplesApplicationTests {
 				.create(fruitListMono)
 				.expectNext(Arrays.asList("apple", "orange", "banana", "kiwi", "strawberry"))
 				.verifyComplete();
+	}
+
+	@Test
+	void collectMap() {
+		Flux<String> animalFlux = Flux.just("aardvark", "elephant", "koala", "eagle", "kangaroo");
+		Mono<Map<Character, String>> animalMapMono = animalFlux.collectMap(s -> s.charAt(0));
+
+		StepVerifier
+				.create(animalMapMono)
+				.expectNextMatches(map -> map.size() == 3 &&
+						map.get('a').equals("aardvark") &&
+						map.get('e').equals("elephant") &&
+						map.get('k').equals("kangaroo"));
 	}
 
 }
