@@ -144,8 +144,7 @@ class ReactorExamplesApplicationTests {
 				.verifyComplete();
 	}
 
-		private record Player(String firstName, String lastName) {
-	}
+	private record Player(String firstName, String lastName) { }
 
 	@Test
 	void flatMap() {
@@ -170,6 +169,17 @@ class ReactorExamplesApplicationTests {
 				.expectNextMatches(playerList::contains)
 				.verifyComplete();
 
+	}
+
+	@Test
+	void collectList() {
+		Flux<String> fruitFlux = Flux.just("apple", "orange", "banana", "kiwi", "strawberry");
+		Mono<List<String>> fruitListMono = fruitFlux.collectList();
+
+		StepVerifier
+				.create(fruitListMono)
+				.expectNext(Arrays.asList("apple", "orange", "banana", "kiwi", "strawberry"))
+				.verifyComplete();
 	}
 
 }
